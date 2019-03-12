@@ -21,7 +21,10 @@ func main() {
 	entries, err := ReadFromFile(entryFile)
 	if err != nil {
 		fmt.Println("Couldn't read from file")
+		fmt.Println("Making new entry file")
+		entries = New()
 	}
+
 
 	c := make(chan []FileEntry)
 
@@ -30,6 +33,7 @@ func main() {
 	args, err := ParseArgs(os.Args[1:])
 	if err != nil {
 		fmt.Println("Error parsing arguments: ", err)
+		return
 	}
 
 	if err := moveFile(args.file, dir); err != nil {
@@ -44,7 +48,7 @@ func main() {
 		kind = File
 	}
 
-	staged := <-c
+	staged := <- c
 
 	if err := deleteStaged(staged, dir, nil); err != nil {
 		fmt.Println("Had trouble removing file: ", err)
@@ -52,10 +56,13 @@ func main() {
 
 	if args.file != "" {
 		entries.AddEntry(args.file, kind, args.time)
+		if err := moveFile(args.file, dir); err != nil {
+			fmt.Println("Couldn't move file to safe_rm dir. ", err)
+		}
 	}
 
 	if err := entries.WriteToFile(entryFile); err != nil {
-		fmt.Println("Couldn't write to file. It is recommended to retrieve all files manualy at ", dir)
+		fmt.Println("Couldn't write to file. It is recommended to retrieve all files manually at ", dir)
 	}
 }
 
