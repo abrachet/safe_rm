@@ -1,0 +1,22 @@
+.TH SAFE_RM 1
+.SH NAME
+safe_rm \- safer version of rm(1)
+.SH SYNOPSIS
+.B safe_rm
+[-vrRnN]
+.IR filename
+[time %d[%c]]
+.SH DESCRIPTION
+.B safe_rm
+moves files to an intermediate directory for a specified time until actually unlinking from the filesystem
+.SH OPTIONS
+.TP
+.BR \-v ", " \-\-verbose
+Be verbose with what safe_rm is doing.
+Default is false.
+.TP
+.BR \-n ", " \-N
+Delete the file now, do not cache. Default is false, this is not recommended
+.TP
+.BR \-r ", " \-R ", " \-\-directory ", " \-\-recursive
+Stages a directory to be recursively deleted. Default is false
