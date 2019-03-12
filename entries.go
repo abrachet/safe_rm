@@ -6,13 +6,14 @@ import (
 )
 
 type Time = uint64
+
 const defaultTime Time = 24
 
 type FileKind = int
 
 const (
-	File 		FileKind = 0
-	Directory 	FileKind = 1
+	File      FileKind = 0
+	Directory FileKind = 1
 )
 
 type FileEntry struct {
@@ -23,7 +24,7 @@ type FileEntry struct {
 
 type Entries struct {
 	defaultTime Time
-	files []FileEntry
+	files       []FileEntry
 }
 
 func New() *Entries {
@@ -121,9 +122,13 @@ func ReadFromFile(file *os.File) (*Entries, error) {
 
 		var kind FileKind
 
-		if name[len(name)-1] == '/' { kind = Directory } else { kind = File }
+		if name[len(name)-1] == '/' {
+			kind = Directory
+		} else {
+			kind = File
+		}
 
-		ret.files = append(ret.files, FileEntry{time, kind, name} )
+		ret.files = append(ret.files, FileEntry{time, kind, name})
 	}
 
 	return ret, nil
@@ -169,7 +174,6 @@ func (ent *Entries) PrintEntries() {
 }
 
 func FindStagedToRemove(c chan []FileEntry, entries *Entries, dir string) {
-
 
 	c <- make([]FileEntry, 0)
 }

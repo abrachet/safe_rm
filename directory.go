@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	safe_rm_dir 	string = "/.safe_rm/"
-	entries_file 	string = ".entries"
+	safe_rm_dir  string = "/.safe_rm/"
+	entries_file string = ".entries"
 )
 
 func GetSafeRmDir() (string, error) {
@@ -30,5 +30,5 @@ func OpenEntryFile() (*os.File, error) {
 }
 
 func Move(path string) error {
-	return os.Rename(path, "./" + path)
+	return os.Rename(path, "./"+path)
 }

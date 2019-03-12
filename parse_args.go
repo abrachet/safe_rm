@@ -7,17 +7,16 @@ import (
 
 type Arguments struct {
 	verbose bool
-	dir		bool
-	now 	bool
+	dir     bool
+	now     bool
 
-	file    string
-	time 	Time
+	file string
+	time Time
 }
 
-
 type expected struct {
-	expect 	func(string) bool
-	parse 	func([]string, int, *Arguments) (int, error)
+	expect func(string) bool
+	parse  func([]string, int, *Arguments) (int, error)
 }
 
 func expect(ex expected, args []string, index int, arguments *Arguments) (int, error) {
@@ -83,15 +82,15 @@ func parseOptions(args []string, index int, arguments *Arguments) (int, error) {
 }
 
 var (
-	option = expected {
-		func (s string) bool {
+	option = expected{
+		func(s string) bool {
 			return s[0] == '-'
 		},
 		parseOptions,
 	}
 
-	time = expected {
-		func (_ string) bool {
+	time = expected{
+		func(_ string) bool {
 			return true
 		},
 		func(args []string, index int, arguments *Arguments) (int, error) {
@@ -106,22 +105,21 @@ var (
 		},
 	}
 
-	file = expected {
-		func (_ string) bool {
+	file = expected{
+		func(_ string) bool {
 			return true
 		},
 		func(args []string, index int, arguments *Arguments) (int, error) {
 			arguments.file = args[index]
 
 			// don't look for time if we are at the end of the list
-			if index == len(args) - 1 {
+			if index == len(args)-1 {
 				return index, nil
 			}
 
-			return expect(time, args, index + 1, arguments)
+			return expect(time, args, index+1, arguments)
 		},
 	}
-
 )
 
 func ParseArgs(args []string) (arguments *Arguments, e error) {
@@ -140,7 +138,6 @@ func ParseArgs(args []string) (arguments *Arguments, e error) {
 			break
 		}
 
-
 		i, err = expect(file, args, index, arguments)
 		if err != nil {
 			e = err
@@ -154,15 +151,15 @@ func ParseArgs(args []string) (arguments *Arguments, e error) {
 }
 
 const (
-	secs 	 	= 1
-	minutes 	= 60 * secs
-	hours 		= 60 * minutes
-	days 		= 24 * hours
+	secs    = 1
+	minutes = 60 * secs
+	hours   = 60 * minutes
+	days    = 24 * hours
 )
 
 func parseTime(time string) (Time, error) {
-	var num 	int64
-	var char 	byte
+	var num int64
+	var char byte
 
 	_, err := fmt.Sscanf(time, "%d%c", &num, &char)
 	if err != nil {
@@ -198,12 +195,12 @@ func TestParseTime(t *testing.T) {
 	}
 
 	got, _ = parseTime("2d")
-	if got != 2 * days {
-		t.Errorf("Expected %d got %d", 2 * days, got)
+	if got != 2*days {
+		t.Errorf("Expected %d got %d", 2*days, got)
 	}
 
 	got, err := parseTime("2")
-	if got != 2 * days {
+	if got != 2*days {
 		t.Errorf("Cannot handle args without char")
 	}
 
@@ -216,4 +213,3 @@ func TestParseTime(t *testing.T) {
 		t.Errorf("--flag is an invalid time")
 	}
 }
-

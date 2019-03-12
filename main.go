@@ -44,7 +44,7 @@ func main() {
 		kind = File
 	}
 
-	staged := <- c
+	staged := <-c
 
 	if err := deleteStaged(staged, dir, nil); err != nil {
 		fmt.Println("Had trouble removing file: ", err)
@@ -60,13 +60,13 @@ func main() {
 }
 
 func moveFile(str, dir string) error {
-	return os.Rename(str, dir + str)
+	return os.Rename(str, dir+str)
 }
 
 func deleteStaged(staged []FileEntry, dir string, exclude *string) (e error) {
 
 	maybeDelete := func(file FileEntry) {
-		if exclude == nil || file.name != *exclude{
+		if exclude == nil || file.name != *exclude {
 			if file.kind == Directory {
 				e = os.RemoveAll(file.name)
 			} else {
