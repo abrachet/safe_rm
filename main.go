@@ -36,11 +36,6 @@ func main() {
 		return
 	}
 
-	if err := moveFile(args.file, dir); err != nil {
-		fmt.Println("Error moving file: ", err)
-		return
-	}
-
 	var kind FileKind
 	if args.dir {
 		kind = Directory
@@ -71,6 +66,7 @@ func moveFile(str, dir string) error {
 }
 
 func deleteStaged(staged []FileEntry, dir string, exclude *string) (e error) {
+	e = nil
 
 	maybeDelete := func(file FileEntry) {
 		if exclude == nil || file.name != *exclude {
@@ -86,5 +82,5 @@ func deleteStaged(staged []FileEntry, dir string, exclude *string) (e error) {
 		maybeDelete(file)
 	}
 
-	return nil
+	return
 }
