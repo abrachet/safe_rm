@@ -6,7 +6,7 @@ import (
 
 const (
 	safe_rm_dir  string = "/.safe_rm/"
-	entries_file string = ".entries"
+	entries_file string = ".entries.json"
 )
 
 func GetSafeRmDir() (string, error) {
