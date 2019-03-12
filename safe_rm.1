@@ -9,6 +9,10 @@ safe_rm \- safer version of rm(1)
 .SH DESCRIPTION
 .B safe_rm
 moves files to an intermediate directory for a specified time until actually unlinking from the filesystem
+.SH USAGE
+safe_rm -r directory/ 2d
+where directory would be cached for 2 days before deletion
+other time options are: s seconds, m minutes, h hours, d days
 .SH OPTIONS
 .TP
 .BR \-v ", " \-\-verbose
@@ -16,7 +20,10 @@ Be verbose with what safe_rm is doing.
 Default is false.
 .TP
 .BR \-n ", " \-N
-Delete the file now, do not cache. Default is false, this is not recommended
+Delete the file now, do not cache.
+Default is false, this is not recommended
 .TP
 .BR \-r ", " \-R ", " \-\-directory ", " \-\-recursive
 Stages a directory to be recursively deleted. Default is false
+.SH SEE ALSO
+rm(1), rmdir(1), unlink(2), symlink(7)
