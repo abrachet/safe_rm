@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	gotime "time"
 )
 
 type Time = uint64
@@ -173,7 +175,38 @@ func (ent *Entries) PrintEntries() {
 	}
 }
 
-func FindStagedToRemove(c chan []FileEntry, entries *Entries, dir string) {
+func (file *FileEntry) shouldRemove(now gotime.Time) (bool, error) {
+	info, err := os.Stat(file.name)
+	if err != nil {
+		log.Fatalln("couldn't get file info with stat(2)", err)
+		return false, err
+	}
 
-	c <- make([]FileEntry, 0)
+	modTime := info.ModTime()
+
+	modTime.Add(gotime.Second * gotime.Duration(file.time))
+
+	if modTime.Before(now) {
+		return false, nil
+	}
+
+	return true, nil
+
+}
+
+func FindStagedToRemove(c chan []FileEntry, entries *Entries, dir string) {
+	ret := make([]FileEntry, 0)
+
+	now := gotime.Now()
+
+	for _, entry := range entries.files {
+		if shouldDel, err := entry.shouldRemove(now); err != nil {
+			log.Println(err)
+		} else if shouldDel {
+			log.Printf("Marking %s to be unlinked\n", entry.name)
+			ret = append(ret, entry)
+		}
+	}
+
+	c <- ret
 }
